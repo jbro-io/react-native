@@ -82,35 +82,35 @@ static void perform_rebinding_with_section(struct rebindings_entry *rebindings,
                                            nlist_t *symtab,
                                            char *strtab,
                                            uint32_t *indirect_symtab) {
-  uint32_t *indirect_symbol_indices = indirect_symtab + section->reserved1;
-  void **indirect_symbol_bindings = (void **)((uintptr_t)slide + section->addr);
-  for (uint i = 0; i < section->size / sizeof(void *); i++) {
-    uint32_t symtab_index = indirect_symbol_indices[i];
-    if (symtab_index == INDIRECT_SYMBOL_ABS || symtab_index == INDIRECT_SYMBOL_LOCAL ||
-        symtab_index == (INDIRECT_SYMBOL_LOCAL   | INDIRECT_SYMBOL_ABS)) {
-      continue;
-    }
-    uint32_t strtab_offset = symtab[symtab_index].n_un.n_strx;
-    char *symbol_name = strtab + strtab_offset;
-    if (strnlen(symbol_name, 2) < 2) {
-      continue;
-    }
-    struct rebindings_entry *cur = rebindings;
-    while (cur) {
-      for (uint j = 0; j < cur->rebindings_nel; j++) {
-        if (strcmp(&symbol_name[1], cur->rebindings[j].name) == 0) {
-          if (cur->rebindings[j].replaced != NULL &&
-              indirect_symbol_bindings[i] != cur->rebindings[j].replacement) {
-            *(cur->rebindings[j].replaced) = indirect_symbol_bindings[i];
-          }
-          indirect_symbol_bindings[i] = cur->rebindings[j].replacement;
-          goto symbol_loop;
-        }
-      }
-      cur = cur->next;
-    }
-  symbol_loop:;
-  }
+//  uint32_t *indirect_symbol_indices = indirect_symtab + section->reserved1;
+//  void **indirect_symbol_bindings = (void **)((uintptr_t)slide + section->addr);
+//  for (uint i = 0; i < section->size / sizeof(void *); i++) {
+//    uint32_t symtab_index = indirect_symbol_indices[i];
+//    if (symtab_index == INDIRECT_SYMBOL_ABS || symtab_index == INDIRECT_SYMBOL_LOCAL ||
+//        symtab_index == (INDIRECT_SYMBOL_LOCAL   | INDIRECT_SYMBOL_ABS)) {
+//      continue;
+//    }
+//    uint32_t strtab_offset = symtab[symtab_index].n_un.n_strx;
+//    char *symbol_name = strtab + strtab_offset;
+//    if (strnlen(symbol_name, 2) < 2) {
+//      continue;
+//    }
+//    struct rebindings_entry *cur = rebindings;
+//    while (cur) {
+//      for (uint j = 0; j < cur->rebindings_nel; j++) {
+//        if (strcmp(&symbol_name[1], cur->rebindings[j].name) == 0) {
+//          if (cur->rebindings[j].replaced != NULL &&
+//              indirect_symbol_bindings[i] != cur->rebindings[j].replacement) {
+//            *(cur->rebindings[j].replaced) = indirect_symbol_bindings[i];
+//          }
+//          indirect_symbol_bindings[i] = cur->rebindings[j].replacement;
+//          goto symbol_loop;
+//        }
+//      }
+//      cur = cur->next;
+//    }
+//  symbol_loop:;
+//  }
 }
 
 static void rebind_symbols_for_image(struct rebindings_entry *rebindings,
